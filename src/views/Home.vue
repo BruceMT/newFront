@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="8">
+    <el-col :span="8" style="padding-right: 10px">
       <div class="grid-content bg-purple">
         <el-card class="box-card">
           <div class="user">
@@ -41,7 +41,7 @@
         </el-card>
       </div>
     </el-col>
-    <el-col :span="16">
+    <el-col :span="16" style="padding-left: 10px">
       <div class="num">
         <el-card v-for="item in countData" :key="item.name" :body-style="{display:'flex',padding:0}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{background:item.color}"></i>
@@ -51,59 +51,35 @@
           </div>
         </el-card>
       </div>
+      <el-card style="height: 280px">
+        <!--            折线图-->
+        <div ref="echarts1" style="height: 280px"></div>
+      </el-card>
+      <div class="graph">
+        <el-card style="height: 260px">
+          <!--            折线图-->
+        </el-card>
+        <el-card style="height: 260px">
+          <!--            折线图-->
+        </el-card>
+
+      </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import PageOne from "@/views/PageOne";
+import * as echarts from 'echarts'
 import {getData} from "@/api";
 
 export default {
 
   name: "Home",
-  // eslint-disable-next-line vue/no-unused-components
-  components: {PageOne},
+
+
   data() {
     return {
-      tableData: [
-        {
-          name: 'oppo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: 'vivo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '苹果',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '小米',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '三星',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '魅族',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        }
-      ],
+      tableData: [],
       tableLabel:{
         name:'课程',
         todayBuy:'今日购买',
@@ -151,9 +127,37 @@ export default {
     }
   },
   mounted() {
-    getData().then((data)=>{
-      console.log(data)
+    getData().then(({data})=>{
+      const {tableData} = data.data
+      this.tableData = tableData
+
+      //基于准备好的dom，初始化echarts实例
+      const echarts1 = echarts.init(this.$refs.echarts1)
+      //指定图表的配置和数据
+      var echarts01option = {}
+      //处理数据xAXIS
+      const {orderData} = data.data
+      const xAxis = Object.keys(orderData.data[0])
+      const xAxisData = {
+        data:xAxis
+      }
+      echarts01option.xAxis = xAxisData
+      echarts01option.yAxis = {}
+      echarts01option.legend = xAxisData
+      echarts01option.series = []
+      xAxis.forEach(key => {
+        echarts01option.series.push({
+          name: key,
+          data:orderData.data.map(item => item[key]),
+          type:'line'
+        })
+      })
+      console.log(echarts01option)
+      //根据刚才配置生成图表
+      echarts1.setOption(echarts01option)
+
     })
+
   }
 }
 </script>
@@ -230,6 +234,14 @@ export default {
   .el-card{
     width: 32%;
     margin-bottom: 20px;
+  }
+}
+.graph{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  .el-card{
+    width: 48%;
   }
 }
 
