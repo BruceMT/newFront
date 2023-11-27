@@ -62,7 +62,8 @@ import {getData} from "@/api";
 export default {
 
   name: "Home",
-  components: PageOne,
+  // eslint-disable-next-line vue/no-unused-components
+  components: {PageOne},
   data() {
     return {
       tableData: [
