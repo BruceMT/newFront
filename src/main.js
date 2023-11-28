@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from "@/router";
 import store from "@/store"
 import "./api/mock"
+import 'echarts/lib/component/grid'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
