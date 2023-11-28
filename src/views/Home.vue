@@ -58,11 +58,12 @@
       </el-card>
       <div class="graph">
         <el-card style="height: 260px">
-          <!--            折线图-->
+          <!--柱状图-->
           <div ref="echarts2" style="height: 260px"></div>
         </el-card>
         <el-card style="height: 260px">
-          <!--            折线图-->
+          <!--饼图-->
+          <div ref="echarts3" style="height: 240px"></div>
         </el-card>
 
       </div>
@@ -131,7 +132,8 @@ export default {
 
   mounted() {
     getData().then(({data})=>{
-      const {tableData,userData} = data.data
+      //结构出各个图表数据
+      const {tableData,userData,videoData} = data.data
       this.tableData = tableData
 
       //基于准备好的dom，初始化echarts实例
@@ -211,6 +213,29 @@ export default {
       }
       echarts2.setOption(echarts02option)
 
+
+      const echarts3 = echarts.init(this.$refs.echarts3)
+      const echarts03option ={
+            tooltip: {
+              trigger: "item",
+            },
+            color: [
+              "#0f78f4",
+              "#dd536b",
+              "#9462e5",
+              "#a6a6a6",
+              "#e1bb22",
+              "#39c362",
+              "#3ed1cf",
+            ],
+            series: [
+              {
+                data: videoData,
+                type:'pie'
+              }
+            ],
+          }
+      echarts3.setOption(echarts03option)
     })
 
   }
