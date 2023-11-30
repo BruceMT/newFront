@@ -2,8 +2,11 @@
 <div class="header-container">
 
   <div class="l-content">
-    <el-button @click="handleMenu" icon="el-icon-menu"  size="mini"></el-button>
-    <span class="header-text">首页</span>
+    <el-button style="margin-right: 20px" @click="handleMenu" icon="el-icon-menu"  size="mini"></el-button>
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{ item.label }}</el-breadcrumb-item>
+
+    </el-breadcrumb>
   </div>
   <div class="r-content">
     <el-dropdown>
@@ -21,12 +24,20 @@
 </template>
 
 <script>
+import{mapState} from 'vuex'
 export default {
   name: "ComonHeader",
   methods:{
     handleMenu(){
       this.$store.commit('collapseMenu')
     }
+  },mounted() {
+
+  },computed:{
+    //解构并且获取vuex中的数据
+    ...mapState({
+      tags: state => state.tab.tabsList
+    })
   }
 }
 </script>
@@ -51,6 +62,23 @@ export default {
   }
   .el-icon-arrow-down {
     font-size: 14px;
+  }
+  .l-content{
+    display: flex;
+    align-items: center;
+    /deep/.el-breadcrumb__item{
+      .el-breadcrumb__inner{
+        font-weight: normal;
+        &.is-link{
+          color: #666;
+        }
+      }
+      &:last-child{
+        .el-breadcrumb__inner{
+          color: white;
+        }
+      }
+    }
   }
 }
 </style>

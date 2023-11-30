@@ -94,8 +94,9 @@ export default {
     //点击菜单
     clickMenu(item){
       //解决重复跳转报错问题
-      if(this.$route.path!==item.path && !(this.$route.path ==='/home'&&(item.path  ==='/')) )
+      //if(this.$route.path!==item.path && !(this.$route.path ==='/home'&&(item.path  ==='/')) )
       this.$router.push(item.path)
+      this.$store.commit('selectMenu',item)
     },
 
   },

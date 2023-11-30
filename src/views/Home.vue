@@ -219,6 +219,8 @@ export default {
             tooltip: {
               trigger: "item",
             },
+
+
             color: [
               "#0f78f4",
               "#dd536b",
@@ -230,8 +232,10 @@ export default {
             ],
             series: [
               {
+                radius:'80%',
                 data: videoData,
-                type:'pie'
+                type:'pie',
+
               }
             ],
           }
