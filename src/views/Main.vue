@@ -10,6 +10,7 @@
         <el-header>
           <comon-header/>
         </el-header>
+        <common-tag />
         <el-main>
           <h1>Main</h1>
           <router-view></router-view>
@@ -23,11 +24,13 @@
 <script>
 import CommonAside from "@/components/CommonAside";
 import ComonHeader from "@/components/ComonHeader";
+import CommonTag from "@/components/CommonTag";
 export default {
   name: "Main",
   components: {
     ComonHeader,
-    CommonAside
+    CommonAside,
+    CommonTag
   },
 
 
