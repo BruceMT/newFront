@@ -6,6 +6,7 @@
         :effect="$route.name === item.name? 'dark' : 'plain'"
         @click="changeMenu(item)"
         @close="handleClose(item,index)"
+        size="small"
     >
       {{ item.label }}
     </el-tag>
@@ -54,6 +55,13 @@ export default {
 
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.tabs{
+  margin-top: 5px;
+  padding: 10px;
+  .el-tag{
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
 </style>
