@@ -10,12 +10,12 @@ export const getUser= (params) =>{
     //返回用户列表
     return http.get('/user/getuser',params)
 }
-export const addUser= () =>{
+export const addUser= (data) =>{
 
     return http.post('/user/add',data)
 }
 
-export const editUser= () =>{
+export const editUser= (data) =>{
 
     return http.post('/user/edit',data)
 }
