@@ -20,7 +20,7 @@ export const editUser= (data) =>{
     return http.post('/user/edit',data)
 }
 
-export const deleteUser= () =>{
+export const deleteUser= (data) =>{
 
     return http.post('/user/delete',data)
 }

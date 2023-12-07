@@ -17,8 +17,8 @@
         <br/>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="form.sex" placeholder="请选择">
-            <el-option label="男" value=1></el-option>
-            <el-option label="女" value=0></el-option>
+            <el-option label="男" :value=1></el-option>
+            <el-option label="女" :value=0></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="出生日期" prop="birth">
@@ -43,54 +43,66 @@
       <el-button type="primary" @click="handleAdd" >
         新增
       </el-button>
-      <el-table
-          :data="tableData"
-          style="width: 100%"
-          max-height="600"
-          highlight-current-row
-          border
-      >
-        <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="age"
-            label="年龄"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="sex"
-            label="性别">
-        </el-table-column>
-        <el-table-column
-            prop="birth"
-            label="生日"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="addr"
-            label="住址">
-        </el-table-column>
-        <el-table-column
-            fixed="right"
-            label="操作"
-           >
-          <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.row)"  size="mini">编辑</el-button>
-            <el-button @click="handleDelete" type="danger" size="mini">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      form搜索区
+    </div>
+    <el-table
 
+        :data="tableData"
+        style="width: 100%"
+        height="90%"
+        highlight-current-row
+        border
+    >
+      <el-table-column
+          prop="name"
+          label="姓名"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="age"
+          label="年龄"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="sex"
+          label="性别">
+        <template slot-scope="scope">
+          <span >{{scope.row.sex === 0?'女':'男' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="birth"
+          label="生日"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="addr"
+          label="住址">
+      </el-table-column>
+      <el-table-column
+          fixed="right"
+          label="操作"
+      >
+        <template slot-scope="scope">
+          <el-button @click="handleEdit(scope.row)"  size="mini">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="mini">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="block">
+      <el-pagination
+          layout="prev, pager, next"
+          :total="total"
+          @current-change="handlePage(val)"
+      >
+      </el-pagination>
     </div>
   </div>
 
 </template>
 
 <script>
-import{getUser,addUser,editUser}from'../api'
+import{getUser,addUser,editUser,deleteUser}from'../api'
 export default {
 
   name: "User",
@@ -117,23 +129,56 @@ export default {
           {  required: true, message: '请选择出生日期', trigger: 'change' }
         ],
         sex: [
-          {  required: true, message: '请选择性别', trigger: 'blur' }
+          {  required: true,  message: '请选择性别', trigger: 'blur' }
         ],
         age: [
           { required: true, message: '请输入年龄', trigger: 'blur' },
         ]
       },
-      tableData:[]
+      tableData:[],
+      total:0,//当前页总条数
+      pageData:{
+
+        page:1,
+        limit:10
+      }
+
     };
   },
   methods: {
+    //选择页码回调函数
+    handlePage(val){
+      this.pageData.page = val
+      this.getLiist()
+    },
     handleEdit(item){
       this.modalType = 1
       this.dialogVisible = true
       //这里用json深拷贝，不影响原数据
       this.form = JSON.parse(JSON.stringify(item))
     },
-    handleDelete(){},
+    handleDelete(row){
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUser(row).then(()=>{
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+
+        this.getLiist()
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
     submit(){
       this.$refs.form.validate((valid) => {
           if(valid){
@@ -164,17 +209,22 @@ export default {
       this.handleClose()
     },
     getLiist(){
-      getUser().then(({data})=>{
-        /* let temData = data.list
+      getUser({params:this.pageData}).then(({data})=>{
+       /*   let temData = data.list
          for(let i =0;i<temData.length;i++){
            if(temData[i].sex===1){
              temData[i].sex='男'
-           }else{
+           }else {
              temData[i].sex='女'
            }
          }
          this.tableData=temData*/
-        this.tableData = data.list.filter(item=> item.sex=item.sex == 1 ?'男':'女')
+        /* 上下两种方法会导致编辑性别不手动修改的 话默认为女*/
+      /*this.tableData = data.list.filter(item=> item.sex = item.sex == 1 ?'男':'女')*/
+        this.tableData = data.list
+        this.total = data.count || 0
+
+        console.log(this.tableData)
       })
     },
     handleAdd(){
@@ -184,10 +234,13 @@ export default {
   },
   mounted() {
     this.getLiist()
+
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.manage{
+  height: 90%;
+}
 </style>
