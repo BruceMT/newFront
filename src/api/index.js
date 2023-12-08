@@ -6,7 +6,7 @@ export const getData = () =>{
     return http.get('/home/getData')
 }
 
-export const getUser= (params) =>{
+export const getUser = (params) =>{
     //返回用户列表
     return http.get('/user/getuser',params)
 }

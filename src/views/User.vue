@@ -45,57 +45,59 @@
       </el-button>
       form搜索区
     </div>
-    <el-table
+    <div class="common-table">
+      <el-table
 
-        :data="tableData"
-        style="width: 100%"
-        height="90%"
-        highlight-current-row
-        border
-    >
-      <el-table-column
-          prop="name"
-          label="姓名"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="age"
-          label="年龄"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="sex"
-          label="性别">
-        <template slot-scope="scope">
-          <span >{{scope.row.sex === 0?'女':'男' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="birth"
-          label="生日"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="addr"
-          label="住址">
-      </el-table-column>
-      <el-table-column
-          fixed="right"
-          label="操作"
+          :data="tableData"
+          style="width: 100%"
+          height="90%"
+          highlight-current-row
+          border
       >
-        <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)"  size="mini">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="mini">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block">
-      <el-pagination
-          layout="prev, pager, next"
-          :total="total"
-          @current-change="handlePage(val)"
-      >
-      </el-pagination>
+        <el-table-column
+            prop="name"
+            label="姓名"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="age"
+            label="年龄"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="sex"
+            label="性别">
+          <template slot-scope="scope">
+            <span >{{scope.row.sex === 0?'女':'男' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            prop="birth"
+            label="生日"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="addr"
+            label="住址">
+        </el-table-column>
+        <el-table-column
+            fixed="right"
+            label="操作"
+        >
+          <template slot-scope="scope">
+            <el-button @click="handleEdit(scope.row)"  size="mini">编辑</el-button>
+            <el-button @click="handleDelete(scope.row)" type="danger" size="mini">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pager">
+        <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="handlePage"
+        >
+        </el-pagination>
+      </div>
     </div>
   </div>
 
@@ -138,7 +140,6 @@ export default {
       tableData:[],
       total:0,//当前页总条数
       pageData:{
-
         page:1,
         limit:10
       }
@@ -146,11 +147,6 @@ export default {
     };
   },
   methods: {
-    //选择页码回调函数
-    handlePage(val){
-      this.pageData.page = val
-      this.getLiist()
-    },
     handleEdit(item){
       this.modalType = 1
       this.dialogVisible = true
@@ -227,6 +223,11 @@ export default {
         console.log(this.tableData)
       })
     },
+    //选择页码回调函数
+    handlePage(val){
+      this.pageData.page = val
+      this.getLiist()
+    },
     handleAdd(){
       this.modalType = 0
       this.dialogVisible = true
@@ -242,5 +243,15 @@ export default {
 <style lang="less" scoped>
 .manage{
   height: 90%;
+  .common-table{
+    position: relative;
+    height: 90%;
+    .pager{
+      position: absolute;
+      bottom: 0;
+      right: 20px;
+    }
+  }
+
 }
 </style>
