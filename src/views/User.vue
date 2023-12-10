@@ -43,7 +43,14 @@
       <el-button type="primary" @click="handleAdd" >
         新增
       </el-button>
-      form搜索区
+        <el-form inline :model="userForm">
+          <el-form-item>
+              <el-input placeholder="请输入名称" v-model="userForm.name"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+          </el-form-item>
+        </el-form>
     </div>
     <div class="common-table">
       <el-table
@@ -104,7 +111,7 @@
 </template>
 
 <script>
-import{getUser,addUser,editUser,deleteUser}from'../api'
+import{getUser,addUser,editUser,deleteUser}from '@/api'
 export default {
 
   name: "User",
@@ -142,7 +149,12 @@ export default {
       pageData:{
         page:1,
         limit:10
-      }
+      },
+      userForm: {
+       name:''
+      },
+
+
 
     };
   },
@@ -166,7 +178,7 @@ export default {
           });
         })
 
-        this.getLiist()
+        this.getList()
 
       }).catch(() => {
         this.$message({
@@ -183,11 +195,11 @@ export default {
             //调接口上传数据
               addUser(this.form).then(()=>{
                 //刷新列表
-                this.getLiist()
+                this.getList()
               })}else{
               editUser(this.form).then(()=>{
                 //刷新列表
-                this.getLiist()
+                this.getList()
               })
             }
             //清空表单
@@ -204,8 +216,8 @@ export default {
     cancel(){
       this.handleClose()
     },
-    getLiist(){
-      getUser({params:this.pageData}).then(({data})=>{
+    getList(){
+      getUser({params:{...this.pageData,...this.userForm}}).then(({data})=>{
        /*   let temData = data.list
          for(let i =0;i<temData.length;i++){
            if(temData[i].sex===1){
@@ -226,15 +238,19 @@ export default {
     //选择页码回调函数
     handlePage(val){
       this.pageData.page = val
-      this.getLiist()
+      this.getList()
     },
     handleAdd(){
       this.modalType = 0
       this.dialogVisible = true
+    },
+    //列表搜索
+    onSubmit(){
+        this.getList()
     }
   },
   mounted() {
-    this.getLiist()
+    this.getList()
 
   }
 }
@@ -243,9 +259,14 @@ export default {
 <style lang="less" scoped>
 .manage{
   height: 90%;
+  .manage-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  }
   .common-table{
     position: relative;
-    height: 90%;
+    height: calc(100% - 62px);
     .pager{
       position: absolute;
       bottom: 0;

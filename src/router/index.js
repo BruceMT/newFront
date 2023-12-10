@@ -9,6 +9,7 @@ import Main from "@/views/Main"
 import Mall from "@/views/Mall";
 import PageOne from "@/views/PageOne";
 import PageTwo from "@/views/PageTwo";
+import Login from "@/views/Login.vue";
 Vue.use(VueRouter)
 const routes = [
     {   path: '/',
@@ -23,6 +24,10 @@ const routes = [
             { path: '/page2', name: "page2",component: PageTwo },//页面2
         ]
     },
+    {
+        path: '/login',
+        component: Login,
+    }
 
 ]
 //获取原型对象上的push函数
