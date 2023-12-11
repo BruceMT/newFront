@@ -1,6 +1,6 @@
 <template>
 <div>
-    <el-form label-width="70px" :inline="true" class="login_container" :model="form" :rules="rules">
+    <el-form ref="form" label-width="70px" :inline="true" class="login_container" :model="form" :rules="rules">
         <h3 class="login_title">系统登录</h3>
         <el-form-item label="用户名" prop="username">
             <el-input v-model="form.username" placeholder="请输入账号"></el-input>
@@ -24,6 +24,8 @@
 <script>
 import Mock from 'mockjs'
 import Cookie  from  'js-cookie'
+import {getMenu} from "@/api";
+
 export default {
     name: "Login",
   data: function () {
@@ -46,10 +48,26 @@ export default {
   },
   methods:{
     submit() {
-      //token信息
+      /*//token信息
       const token  = Mock.Random.guid()
-      //将token信息存入Cookie用于不同页面通信
-      Cookie.set('token',token)
+      */
+      this.$refs.form.validate((val)=>{
+            if(val){
+                getMenu(this.form).then(({data})=>{//解构data
+                    if(data.code === 20000){
+                        //将token信息存入Cookie用于不同页面通信
+                        Cookie.set('token',data.data.token)
+                        //跳转到首页
+                        this.$router.push("/home")
+                    }else{
+                        this.$message.error(data.data.message)
+                    }
+                })
+            }
+      })
+
+
+
     }
   },
 }

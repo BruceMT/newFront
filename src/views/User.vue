@@ -190,7 +190,6 @@ export default {
     submit(){
       this.$refs.form.validate((valid) => {
           if(valid){
-
             if( this.modalType === 0){
             //调接口上传数据
               addUser(this.form).then(()=>{
