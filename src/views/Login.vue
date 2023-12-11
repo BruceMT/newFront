@@ -9,33 +9,49 @@
             <el-input  type="password" v-model="form.password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button style="margin-left: 105px;margin-top: 10px" type="primary" size="medium">登录</el-button>
+            <el-button style="margin-left: 105px;
+                       margin-top: 10px"
+                       type="primary"
+                       size="medium"
+                       @click="submit"
+
+            >登录</el-button>
         </el-form-item>
     </el-form>
 </div>
 </template>
 
 <script>
+import Mock from 'mockjs'
+import Cookie  from  'js-cookie'
 export default {
     name: "Login",
-    data(){
-    return{
-        form:{
-            username:'',
-            password:''
-        },
-        rules:{
-            username:[
-                {required:true,trigger:'blur',message:'请输入用户名'}
-                ],
-            password: [
-                {required:true,trigger:'blur',message:'请输入密码'}
-                ]
+  data: function () {
+    return {
+      form: {
+        username: '',
+        password: ''
+      },
+      rules: {
+        username: [
+          {required: true, trigger: 'blur', message: '请输入用户名'}
+        ],
+        password: [
+          {required: true, trigger: 'blur', message: '请输入密码'}
+        ]
 
-        }
+      }
 
     }
+  },
+  methods:{
+    submit() {
+      //token信息
+      const token  = Mock.Random.guid()
+      //将token信息存入Cookie用于不同页面通信
+      Cookie.set('token',token)
     }
+  },
 }
 </script>
 

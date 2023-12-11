@@ -9,7 +9,11 @@ import 'echarts/lib/component/grid'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+//添加全局前置导航守卫
+router.beforeEach((to, from, next)=>{
 
+
+})
 new Vue({
   router,
   store,
