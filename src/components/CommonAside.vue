@@ -35,53 +35,11 @@
 
 
 <script>
+import Cookie from "js-cookie";
 export default {
   data() {
     return {
 
-      menuData: [
-        {
-          path: "/",
-          name: "home",
-          label: "首页",
-          icon: "s-home",
-          url: "Home/Home",
-        },
-        {
-          path: "/mall",
-          name: "mall",
-          label: "商品管理",
-          icon: "s-goods",
-          url: "MallManage/MallManage",
-        },
-        {
-          path: "/user",
-          name: "user",
-          label: "用户管理",
-          icon: "user",
-          url: "UserManage/UserManage",
-        },
-        {
-          label: "其他",
-          icon: "location",
-          children: [
-            {
-              path: "/page1",
-              name: "page1",
-              label: "首页",
-              icon: "setting",
-              url: "Other/PageOne",
-            },
-            {
-              path: "/page2",
-              name: "page2",
-              label: "首页",
-              icon: "setting",
-              url: "Other/PageTwo",
-            },
-          ],
-        },
-      ]
     };
   },
   methods: {
@@ -101,6 +59,11 @@ export default {
 
   },
   computed:{
+    //获取 store中的不同角色的 侧边数据
+    menuData(){
+      //判断当前数据，如果 缓存中没有，从cookie里获取
+      return JSON.parse(Cookie.get('menu')) || this.$store.state.tab.menu
+    },
     //没有子菜单
     noChildren(){
       return this.menuData.filter(item => !item.children)
