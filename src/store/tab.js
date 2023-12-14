@@ -51,16 +51,21 @@ export default {
             menu.forEach(item =>{
                 if(item.children){
                   item.children = item.children.map(item =>{
-                        item.component=()=>import('../views/${item.url}')
+                      //这里要用模板反引号
+                        item.component=()=>import(`../views/${item.url}`)
                         return item
                     })
                     menuArray.push(...item.children)
                 }else{
-                    item.component = ()=>import('../views/${item.url}')
+                    item.component = ()=>import(`../views/${item.url}`)
                     menuArray.push(item)
                 }
             })
             console.log(menuArray,'menuarray')
+            //路由的动态添加
+            menuArray.forEach(item =>{
+                router.addRoute('Main',item)
+            })
         }
 
     }

@@ -27,4 +27,8 @@ new Vue({
   router,
   store,
   render: h => h(App),
+    //刷新加载路由
+    created() {
+      store.commit('addMenu',router)
+    }
 }).$mount('#app')
